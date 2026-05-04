@@ -34,9 +34,9 @@ public class Point2D {
 
     //Add Function
      Point2D add(Point2D point) {
-        x = x + point.x;
-        y = y + point.y;
-        return new Point2D(x,y);
+        this.x = this.x + point.x;
+        this.y = this.y + point.y;
+        return this;
     }
 
     //Distance Function (could also be made a bit clearer with better readability

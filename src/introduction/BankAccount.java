@@ -12,7 +12,7 @@ public class BankAccount {
         while(money <= moneyGoal) {
             money *= interest;
             year++;
-            //System.out.println(String.format("Your current balance is: %.4f after %d Years!", money, year));
+            System.out.println(String.format("Your current balance is: %.4f after %d Years!", money, year));
         }
         System.out.printf("The time it takes to double the money with an interest rate of %.4f is %d Years!%n", interest, year);
     }
