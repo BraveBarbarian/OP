@@ -5,13 +5,14 @@ import java.lang.Math;
 public class Bandit {
     //alternativ über Math.random
     private static Random random = new Random();
-
     private String name;
     private double pricePerRound;
-    private double averageWin;
-    private double stdDevWin;
+    private double averageWin; //used for µ
+    private double stdDevWin; //used for σ
     private double overallProfit;
     private int roundsPlayed;
+
+    //Constructors with different amounts of Parameters
 
     public Bandit(String name, double pricePerRound, double averageWin, double stdDevWin) {
         this(pricePerRound, averageWin, stdDevWin);
@@ -20,6 +21,7 @@ public class Bandit {
 
     public Bandit(double pricePerRound, double averageWin, double stdDevWin) {
         this();
+        this.name = "Unnamed Bandit";
         this.pricePerRound = pricePerRound;
         this.averageWin = averageWin;
         this.stdDevWin = stdDevWin;
@@ -28,6 +30,8 @@ public class Bandit {
     public Bandit() {
 
     }
+
+    //Getters
 
     public String getName() {
         return name;
@@ -42,9 +46,14 @@ public class Bandit {
     }
 
     public double getMeanProfitPerRound() {
-        //TODO: calculate Mean Profit per Round, if no rounds played, return 0
-        double meanProfit = 1;
-        return meanProfit;
+
+        //return 0 if no rounds are played (to prevent /0)
+        if (roundsPlayed == 0) {
+            return 0;
+        }
+        else {
+            return overallProfit/ roundsPlayed;
+        }
     }
 
     public int getRoundsPlayed() {
@@ -52,21 +61,32 @@ public class Bandit {
     }
 
     public double play() {
-        /*TODO: Die Methode play() spielt eine Runde und aktualisiert die entsprechenden Attribute der
-        TODO: Spielstatistiken. Sie ermittelt den Gewinn durch Aufruf der nachfolgend beschriebenen Methode
-        TODO: determineWin() und gibt diesen zurück.
-         */
-        return 0;
+
+        double win = determineWin();
+
+        this.overallProfit -= this.pricePerRound - win;
+        this.roundsPlayed++;
+
+        return win;
     }
 
     private double determineWin() {
         // Win gets determined by the formula p(x) = 1/sqrt(2PIσ)*exp(-0.5*(x-µ/σ)^2)
         // Equation is divided across multiple lines for better readability
-        double x = random.nextDouble(); //x as rand number
+        /* double x = random.nextDouble(); //x as rand number
         double p = 1/Math.sqrt(2*Math.PI*stdDevWin);
         double a = Math.pow((x-averageWin)/stdDevWin, 2);
-        p *= Math.exp(-0.5*a);
-        return p;
+        p *= Math.exp(-0.5*a); */
+        //TODO: Question nextGaussian
+
+       double p = averageWin + stdDevWin * random.nextGaussian();
+
+        //If the win is negative set the win to 0
+        if(p <= 0) {
+            return 0;
+        }
+
+        return Math.round(p * 10.0)/10.0;
     }
 
 
