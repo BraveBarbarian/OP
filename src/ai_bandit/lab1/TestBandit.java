@@ -66,7 +66,7 @@ public class TestBandit {
         Map<String, Field> attributes = getAccessibleAttributes();
 
         // Create object and check attributes
-        Bandit bandit = new Bandit();
+        Bandit bandit = new Bandit("My name", 1.49, 0.81, 0.71);
         assertEquals(attributes.get("name").get(bandit), "My name");
         assertEquals((double)attributes.get("pricePerRound").get(bandit), 1.49, DOUBLE_EPS);
         assertEquals((double)attributes.get("averageWin").get(bandit), 0.81, DOUBLE_EPS);

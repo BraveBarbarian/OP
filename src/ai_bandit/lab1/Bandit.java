@@ -20,15 +20,10 @@ public class Bandit {
     }
 
     public Bandit(double pricePerRound, double averageWin, double stdDevWin) {
-        this();
         this.name = "Unnamed Bandit";
         this.pricePerRound = pricePerRound;
         this.averageWin = averageWin;
         this.stdDevWin = stdDevWin;
-    }
-
-    public Bandit() {
-
     }
 
     //Getters
@@ -64,7 +59,7 @@ public class Bandit {
 
         double win = determineWin();
 
-        this.overallProfit -= this.pricePerRound - win;
+        this.overallProfit += this.pricePerRound - win;
         this.roundsPlayed++;
 
         return win;

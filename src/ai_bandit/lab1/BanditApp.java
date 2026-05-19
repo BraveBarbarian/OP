@@ -10,11 +10,11 @@ public class BanditApp {
 
 
         //Constructing first bandit
-        Bandit myBandit = new Bandit("Slotty", 1.00, 0.80 , 0.20);
+        Bandit myBandit = new Bandit("Slot Machine", 1.00, 0.80 , 0.20);
 
         String name = myBandit.getName();
         double price = myBandit.getPricePerRound();
-        //TODO: Question, why does printf work and println not
+
         System.out.println("Gambling:\t One-Armed Bandit");
         System.out.printf("Price:\t\t %.2f EUR%n", price);
 
@@ -28,7 +28,7 @@ public class BanditApp {
             double win = myBandit.play();
             double net = myBandit.getOverallProfit();
             profit = net;
-            System.out.printf("%d\t| %.1f\t\t| %.1f%n", i+1 , win, net);
+            System.out.printf("%5d\t| %8.1f\t| %8.1f%n", i+1 , win, net);
         }
 
         System.out.println("\n" + name + "'s statistics :");

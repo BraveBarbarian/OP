@@ -25,7 +25,7 @@ public class MultiBanditApp {
         int numberBandits = scanner.nextInt();
         MultiBandit multiBandit = new MultiBandit(numberBandits);
 
-        System.out.println("Round\t| Bandit\t| Win [EUR]\t| Net [EUR]");
+        System.out.println("Round\t| Bandit\t| Win [EUR]\t\t| Net [EUR]");
         for (int i = 1; i < rounds + 1; i++) {
             //choosing random bandit
             int banditIndex = random.nextInt(numberBandits);
@@ -35,7 +35,7 @@ public class MultiBanditApp {
             net = multiBandit.getOverallProfit();
             profit = net;
 
-            System.out.printf("%d\t| %d\t| %.1f\t\t| %.1f%n", i, banditIndex, win, net);
+            System.out.printf("%5d\t| %5d\t\t| %8.1f\t\t| %8.1f%n", i, banditIndex, win, net);
 
         }
 
