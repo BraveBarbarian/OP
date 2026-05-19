@@ -10,9 +10,7 @@ public class MultiBandit{
 
     public MultiBandit(int numberBandits) {
         this.bandits = new Bandit[numberBandits];
-
-        //get one random bandit that is always winning
-        int numberWinningBandit = random.nextInt(numberBandits);
+        int numberWinningBandit = random.nextInt(numberBandits);    //get one random bandit that is always winning
 
         //generate multiple bandits with 1 winning bandit
         for(int i = 0; i < numberBandits; i++) {
@@ -44,9 +42,8 @@ public class MultiBandit{
     public double getOverallProfit() {
         double totalProfit = 0;
 
-        for(int i = 0; i < bandits.length; i++) {
-            Bandit currentBandit = bandits[i];
-            totalProfit += currentBandit.getOverallProfit();
+        for (Bandit bandit : bandits) {
+            totalProfit += bandit.getOverallProfit();
         }
 
         return totalProfit;
@@ -68,19 +65,14 @@ public class MultiBandit{
             int numberRoundsPlayed = 0;
 
             //get roundsplayed for each bandit and add (I feel like there is a better method)
-            for (int i = 0; i < bandits.length; i++) {
-                Bandit currentBandit = bandits[i];
-                numberRoundsPlayed += currentBandit.getRoundsPlayed();
+            for (Bandit bandit : bandits) {
+                numberRoundsPlayed += bandit.getRoundsPlayed();
             }
 
             return numberRoundsPlayed;
         }
 
     public double play(int banditIndex) {
-        Bandit chosenBandit = bandits[banditIndex];
-
-        double win = chosenBandit.play();
-
-        return win;
+        return bandits[banditIndex].play();
     }
 }

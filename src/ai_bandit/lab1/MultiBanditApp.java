@@ -10,16 +10,13 @@ public class MultiBanditApp {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
         double net = 0;
-        double profit = 0;
         double price = 1.0;
 
-
         System.out.println("Gambling:\tMulti-Armed Bandit");
-        System.out.printf("Price:\t\t %.2f EUR%n", price);
+        System.out.printf("Price:\t\t %.2f EUR\n", price);
 
         System.out.println("How many rounds would you like to play? ");
         int rounds = scanner.nextInt();
-
 
         System.out.println("How many bandits would you like to play on?");
         int numberBandits = scanner.nextInt();
@@ -33,7 +30,6 @@ public class MultiBanditApp {
             double win = multiBandit.play(banditIndex);
 
             net = multiBandit.getOverallProfit();
-            profit = net;
 
             System.out.printf("%5d\t| %5d\t\t| %8.1f\t\t| %8.1f%n", i, banditIndex, win, net);
 
@@ -43,6 +39,5 @@ public class MultiBanditApp {
         System.out.println("Rounds:\t" + rounds);
         System.out.printf("Profit:\t%.1f (%.1f EUR/round)", net, net / rounds);
     }
-        //TODO: make number of bandits start from 1 instead of 0
-        //TODO: Make display if more or 10 bandits played on better
+
 }

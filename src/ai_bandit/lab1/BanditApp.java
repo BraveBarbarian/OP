@@ -8,7 +8,6 @@ public class BanditApp {
         //Input from user with Scanner
         Scanner scanner = new Scanner(System.in);
 
-
         //Constructing first bandit
         Bandit myBandit = new Bandit("Slot Machine", 1.00, 0.80 , 0.20);
 
@@ -22,6 +21,7 @@ public class BanditApp {
         int rounds = scanner.nextInt();
 
         double profit = 0;
+
         //Print table as in the example
         System.out.println("Round\t| Win [EUR]\t| Net [EUR]");
         for(int i = 0; i < rounds; i++) {

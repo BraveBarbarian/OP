@@ -56,7 +56,6 @@ public class Bandit {
     }
 
     public double play() {
-
         double win = determineWin();
 
         this.overallProfit += this.pricePerRound - win;
@@ -83,9 +82,6 @@ public class Bandit {
 
         return Math.round(p * 10.0)/10.0;
     }
-
-
-
 }
 
 
