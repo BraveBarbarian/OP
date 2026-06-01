@@ -1,4 +1,4 @@
-package introduction;
+package Labs.introduction;
 
 public class BankAccount {
 

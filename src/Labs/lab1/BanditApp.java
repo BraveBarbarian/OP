@@ -1,28 +1,22 @@
-package ai_bandit.lab1;
+package Labs.lab1;
 import java.util.Scanner;
 
 public class BanditApp {
 
     public static void main(String[] args) {
 
-        //Input from user with Scanner
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in); //User Input
 
-        //Constructing first bandit
         Bandit myBandit = new Bandit("Slot Machine", 1.00, 0.80 , 0.20);
-
         String name = myBandit.getName();
         double price = myBandit.getPricePerRound();
 
         System.out.println("Gambling:\t One-Armed Bandit");
         System.out.printf("Price:\t\t %.2f EUR%n", price);
-
         System.out.println("How many rounds would you like to play? ");
         int rounds = scanner.nextInt();
-
         double profit = 0;
 
-        //Print table as in the example
         System.out.println("Round\t| Win [EUR]\t| Net [EUR]");
         for(int i = 0; i < rounds; i++) {
             double win = myBandit.play();

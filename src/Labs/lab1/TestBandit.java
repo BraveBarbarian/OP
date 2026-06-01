@@ -1,4 +1,4 @@
-package ai_bandit.lab1;
+package Labs.lab1;
 
 import static org.junit.Assert.*;
 import java.lang.reflect.Field;

@@ -1,4 +1,4 @@
-package ai_bandit.lab1;
+package Labs.lab2;
 
 import java.util.Random;
 
@@ -12,8 +12,8 @@ public class MultiBandit{
         this.bandits = new Bandit[numberBandits];
         int numberWinningBandit = random.nextInt(numberBandits);    //get one random bandit that is always winning
 
-        //generate multiple bandits with 1 winning bandit
-        for(int i = 0; i < numberBandits; i++) {
+
+        for(int i = 0; i < numberBandits; i++) { //generate multiple bandits with 1 winning bandit
             double mu = 0.0;
 
             //check if i is the number of the winning Bandit
@@ -52,8 +52,7 @@ public class MultiBandit{
     public double getMeanProfitPerRound() {
         int rounds = getRoundsPlayed();
 
-        //return 0 with no played rounds to avoid /0
-        if(rounds == 0) {
+        if(rounds == 0) {   //return 0 with no played rounds to avoid /0
             return 0;
         }
         else {
@@ -63,8 +62,6 @@ public class MultiBandit{
 
         public int getRoundsPlayed() {
             int numberRoundsPlayed = 0;
-
-            //get roundsplayed for each bandit and add (I feel like there is a better method)
             for (Bandit bandit : bandits) {
                 numberRoundsPlayed += bandit.getRoundsPlayed();
             }

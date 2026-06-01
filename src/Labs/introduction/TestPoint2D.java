@@ -1,4 +1,4 @@
-package introduction;
+package Labs.introduction;
 
 import static org.junit.Assert.*;
 
