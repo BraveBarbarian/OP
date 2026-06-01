@@ -6,7 +6,7 @@ public class MultiBandit{
 
     //Array of bandits
     private Bandit[] bandits;
-    private static Random random = new Random();
+    private static Random random = new Random(); //can somehow be deleted?
 
     public MultiBandit(int numberBandits) {
         this.bandits = new Bandit[numberBandits];

@@ -23,7 +23,7 @@ public class WheelApp {
             double win = myWheel.play();
             double net = myWheel.getOverallProfit();
             profit = net;
-            System.out.printf("%5d\t| %8.1f\t| %8.1f\n", i+1 , win, net);
+            System.out.printf("%5d\t| %8.1f\t| %8.1f\n", i+1 , win, -net);
         }
 
         System.out.println("\n Wheel of Fortune statistics :");

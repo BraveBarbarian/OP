@@ -23,7 +23,7 @@ public class BanditApp {
             double win = myBandit.play();
             double net = myBandit.getOverallProfit();
             profit = net;
-            System.out.printf("%5d\t| %8.1f\t| %8.1f%n", i+1 , win, net);
+            System.out.printf("%5d\t| %8.1f\t| %8.1f%n", i+1 , win, -net);
         }
 
         System.out.println("\n" + name + "'s statistics :");

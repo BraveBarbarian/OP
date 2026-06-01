@@ -2,37 +2,41 @@ package Labs.lab2;
 
 public class WheelOfFortune extends Gambling{
 
-    private int numberFields;
-    private final double categoryWins[];
-    private final double categoryChances[] = {0};
+    private final int numberFields;
+    private final double[] categoryWins;
+    private final double[] categoryChances;
 
 
-    public  WheelOfFortune(double pricePerRound, int categoryNumberFields[], double categoryWins[]) {
+    public  WheelOfFortune(double pricePerRound, int[] categoryNumberFields, double[] categoryWins) {
         super("Unnamed WheelofFortune", pricePerRound);
         this.categoryWins = categoryWins;
-        int numberCategories = categoryNumberFields.length;
-        for(int numberFields : categoryNumberFields) {
-            numberFields =+ numberFields;
-        }
+        this.categoryChances = new double[categoryNumberFields.length];
 
+        int totalFields = 0;
+        for (int categoryNumberField : categoryNumberFields) {
+            totalFields += categoryNumberField;
+        }
+        for (int i = 0; i < categoryNumberFields.length; i++) {
+            this.categoryChances[i] = categoryNumberFields[i] / (double) totalFields; //cast to prevent integer precision
+        }
+        this.numberFields = totalFields;
     }
 
     public int getNumberFields() {
         return numberFields;
     }
 
-
     protected double determineWin() {
-        //weighted approach?!?
-        //total NumberField approach!?!
-        int winningField = random.nextInt(numberFields  + 1);
-        //testcase: catNumFiel[15, 10, 4, 1]; catWin[0, 1, 2, 5];
-        // total fields = 30
-        categoryChances
-        for(int i = 0; i <= numberFields; i++) {
+        double winningField = random.nextDouble();
+        double cumulChance = 0.0;
 
+        for (int i = 0; i < categoryChances.length; i++) {
+            cumulChance += categoryChances[i]; //add chance to cumulative chance
+            if (winningField < cumulChance) { //lookup the Win category
+                return categoryWins[i];
+            }
         }
-
-        return Math.round(win * 10.0)/10.0;
+        return 0.0; //Fallback
     }
 }
+
