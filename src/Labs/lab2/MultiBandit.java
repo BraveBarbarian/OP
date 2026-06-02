@@ -12,7 +12,6 @@ public class MultiBandit{
         this.bandits = new Bandit[numberBandits];
         int numberWinningBandit = random.nextInt(numberBandits);    //get one random bandit that is always winning
 
-
         for(int i = 0; i < numberBandits; i++) { //generate multiple bandits with 1 winning bandit
             double mu = 0.0;
 
@@ -60,14 +59,14 @@ public class MultiBandit{
         }
     }
 
-        public int getRoundsPlayed() {
-            int numberRoundsPlayed = 0;
-            for (Bandit bandit : bandits) {
-                numberRoundsPlayed += bandit.getRoundsPlayed();
-            }
-
-            return numberRoundsPlayed;
+    public int getRoundsPlayed() {
+        int numberRoundsPlayed = 0;
+        for (Bandit bandit : bandits) {
+            numberRoundsPlayed += bandit.getRoundsPlayed();
         }
+
+        return numberRoundsPlayed;
+    }
 
     public double play(int banditIndex) {
         return bandits[banditIndex].play();

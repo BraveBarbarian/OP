@@ -2,10 +2,10 @@ package Labs.lab2;
 import java.util.Random;
 
 public class MultiBanditSolver {
-    private static Random random = new Random();
-    private MultiBandit bandits;
-    private int[] counts;
-    private double[] wins; //wins - costPerRound
+    private static final Random random = new Random();
+    private final MultiBandit bandits;
+    private final int[] counts;
+    private final double[] wins; //wins - costPerRound
     private double epsilon;
 
     public MultiBanditSolver(MultiBandit bandits) {

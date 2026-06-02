@@ -4,7 +4,6 @@ public class Bandit extends  Gambling{
     private final double averageWin; //used for µ
     private final double stdDevWin; //used for σ
 
-
     public Bandit(String name, double pricePerRound, double averageWin, double stdDevWin) {
         super(name, pricePerRound);
         this.averageWin = averageWin;
@@ -26,8 +25,6 @@ public class Bandit extends  Gambling{
 
         return Math.round(win * 10.0)/10.0;
     }
-
-
 }
 
 

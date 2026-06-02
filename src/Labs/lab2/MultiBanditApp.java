@@ -17,7 +17,7 @@ public class MultiBanditApp {
         double epsilonInput = scanner.nextDouble() / 100.0; //convert to [0,1]
 
         MultiBandit multiBandit = new MultiBandit(numberBandits);
-        MultiBanditSolver solver = new MultiBanditSolver(multiBandit); //
+        MultiBanditSolver solver = new MultiBanditSolver(multiBandit);
 
         // Determine strategy
         boolean useEpsilonGreedy = epsilonInput >= 0.0 && epsilonInput <= 1.0;
