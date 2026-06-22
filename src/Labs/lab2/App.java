@@ -12,15 +12,15 @@ public class App {
     private MultiBandit multiBandit;
     private MultiBanditSolver solver;
     private int[] banditCounts;
-
+    private final int numberBandits = 7; //custom amount of Bandits
     private JRadioButton radioBtnRndm;
     private JRadioButton radioBtnEpsGreedy;
 
     public App() {
-        multiBandit = new MultiBandit(7);
+        multiBandit = new MultiBandit(numberBandits);
         solver = new MultiBanditSolver(multiBandit);
         solver.setGreedyEpsilon(0.15); // Typischer Wert: 15%
-        banditCounts = new int[7];
+        banditCounts = new int[numberBandits];
 
         JFrame frame = new JFrame("Bandit App");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -86,7 +86,7 @@ public class App {
                 multiBandit = new MultiBandit(7);
                 solver = new MultiBanditSolver(multiBandit);
                 solver.setGreedyEpsilon(0.15);
-                banditCounts = new int[7];
+                banditCounts = new int[numberBandits];
 
                 // Graphen leeren bzw. zurücksetzen
                 barGraph.updateBarGraph(banditCounts);
@@ -129,25 +129,19 @@ public class App {
 
         for (int i = 0; i < rounds; i++) {
             int banditIndex;
-
-            // Strategie auswerten
             if (useEpsilonGreedy) {
                 banditIndex = solver.chooseEpsilonGreedy();
             } else {
                 banditIndex = solver.chooseRandom();
             }
 
-            // Runde spielen
             double win = multiBandit.play(banditIndex);
             solver.addBanditResponse(banditIndex, win);
             banditCounts[banditIndex]++;
-
-            // Kontostand berechnen: Startkapital (10.0) minus Verlust der Banditen
             double currentMoney = 10.0 - multiBandit.getOverallProfit();
             moneyOverTime.updateMoney(currentMoney);
         }
 
-        // Balkendiagramm nach den Zügen aktualisieren
         barGraph.updateBarGraph(banditCounts);
     }
 

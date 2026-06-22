@@ -38,7 +38,6 @@ public class BarGraph extends JPanel {
         g.drawLine(20, height - 30, width, height - 30);
         g.setColor(Color.DARK_GRAY);
         for (int i = 0; i < counts.length; i++) {
-
             int barHeight = (int) (((double) counts[i] / maxCount) * (height - 60)); //height dependant on maxCount, casting to prevent 0 pixel heights
             int x = (i * 2 * barWidth) + barWidth;
             int y = height - 30 - barHeight;
