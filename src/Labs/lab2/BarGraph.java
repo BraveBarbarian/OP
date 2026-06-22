@@ -9,7 +9,7 @@ public class BarGraph extends JPanel {
 
     public BarGraph() {
         counts = new int[]{0, 0, 0, 0, 0, 0, 0};
-        counts = new int[]{15, 30, 45, 10, 5, 20, 500};
+        //counts = new int[]{15, 30, 45, 10, 5, 20, 500};
     }
 
     public void updateBarGraph(int[] newCounts) {
