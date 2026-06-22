@@ -7,19 +7,20 @@ import java.awt.event.ActionListener;
 
 public class App {
 
-    private BarGraph barGraph;
-    private MoneyOverTime moneyOverTime;
+    private final BarGraph barGraph;
+    private final MoneyOverTime moneyOverTime;
     private MultiBandit multiBandit;
     private MultiBanditSolver solver;
     private int[] banditCounts;
     private final int numberBandits = 7; //custom amount of Bandits
-    private JRadioButton radioBtnRndm;
-    private JRadioButton radioBtnEpsGreedy;
+    private final JRadioButton radioBtnEpsGreedy;
+    private Thread autoPlayThread;
+    private volatile boolean isRunning = false;
 
     public App() {
         multiBandit = new MultiBandit(numberBandits);
         solver = new MultiBanditSolver(multiBandit);
-        solver.setGreedyEpsilon(0.15); // Typischer Wert: 15%
+        solver.setGreedyEpsilon(0.15);
         banditCounts = new int[numberBandits];
 
         JFrame frame = new JFrame("Bandit App");
@@ -28,7 +29,6 @@ public class App {
         //get Screen size
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();
-
         frame.setSize(screenSize.width*3/4, screenSize.height*3/4);
         frame.setLocationRelativeTo(null);
         Container contentPane = frame.getContentPane();
@@ -42,7 +42,7 @@ public class App {
         strategySelectionPanel.setLayout(new BoxLayout(strategySelectionPanel, BoxLayout.Y_AXIS));
         strategySelectionPanel.setBorder(BorderFactory.createTitledBorder("Selection strategy:"));
 
-        radioBtnRndm = new JRadioButton("Random bandit  ", true);
+        JRadioButton radioBtnRndm = new JRadioButton("Random bandit  ", true);
         radioBtnEpsGreedy = new JRadioButton("Epsilon-greedy  ");
         ButtonGroup group = new ButtonGroup();
         group.add(radioBtnRndm);
@@ -80,15 +80,18 @@ public class App {
         bottomPanel.add(barGraph);
         bottomPanel.add(moneyOverTime);
 
-        //Implementing Button-ActionListener
         btnReset.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
+                if (isRunning) {
+                    isRunning = false;
+                    btnStart.setText("Start");
+                }
+
                 multiBandit = new MultiBandit(7);
                 solver = new MultiBanditSolver(multiBandit);
                 solver.setGreedyEpsilon(0.15);
                 banditCounts = new int[numberBandits];
 
-                // Graphen leeren bzw. zurücksetzen
                 barGraph.updateBarGraph(banditCounts);
                 moneyOverTime.reset();
             }
@@ -96,25 +99,39 @@ public class App {
 
         btnPlay1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                playRounds(1);
+                if (!isRunning) playRounds(1);
             }
         });
 
         btnPlay10.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                playRounds(10);
+                if (!isRunning) playRounds(10);
             }
         });
 
         btnPlay100.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                playRounds(100);
+                if (!isRunning) playRounds(100);
             }
         });
 
         btnPlay10000.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                playRounds(10000);
+                if (!isRunning) playRounds(10000);
+            }
+        });
+
+        btnStart.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                if (isRunning) {
+                    isRunning = false;
+                    btnStart.setText("Start");
+                } else {
+                    isRunning = true;
+                    btnStart.setText("Stop");
+                    autoPlayThread = new Thread(new AutoPlayTask());
+                    autoPlayThread.start();
+                }
             }
         });
 
@@ -148,5 +165,28 @@ public class App {
     static void main() {
         new App();
     }
-}
 
+    // Autoplay thread
+    private class AutoPlayTask implements Runnable {
+        public void run() {
+            while (isRunning) {
+                SwingUtilities.invokeLater(new Runnable() { //make Thread Save with EDT
+                    public void run() {
+                        if (isRunning) {
+                            playRounds(1);
+                        }
+                    }
+                });
+
+
+                try {
+                    Thread.sleep(100); //sleep is surrounded by try-catch to avoid Interruption
+                } catch (InterruptedException e) {
+                    //Thread.currentThread().interrupt();
+                    //break;
+                    throw new RuntimeException(e);
+                }
+            }
+            }
+        }
+    }

@@ -47,26 +47,34 @@ public class MoneyOverTime extends JPanel {
 
         int zeroY = (int) (height - ((0 - minMoney) / range) * height);
 
-        g.setColor(Color.BLACK);
+        g.setColor(Color.black);
         g.drawLine(0, zeroY, width, zeroY);
-        //TODO: Include current Balance in String
-        g.drawString("Available money", 10, 20);
 
         int numPoints = moneyHistory.size();
-        //TODO: Make zeroY be below "Available money" at all times
-        //TODO: make MoneyOverTime better with lower sample of plays
-        double xStep = (double) width / Math.max(1, (numPoints - 1));
+        double spaceBetweenPoints = Math.max(50.0, numPoints - 1);
+        double xStep = (double) width / spaceBetweenPoints;
 
         for (int i = 0; i < numPoints; i++) {
             double currentMoney = moneyHistory.get(i);
+
             int x = (int) (i * xStep);
             int y = (int) (height - ((currentMoney - minMoney) / range) * height);
+
             if (currentMoney >= 0) {
                 g.setColor(Color.green);
             } else {
                 g.setColor(Color.red);
             }
+
             g.drawLine(x, zeroY, x, y);
         }
+
+        double currentMoney = moneyHistory.get(numPoints - 1);
+        String infoText = String.format("Available money: %.2f €", currentMoney);
+        g.setColor(new Color(255, 255, 255, 220)); //rgb to set opacity
+        g.fillRect(5, 5, 180, 25);
+        g.setColor(Color.black);
+        g.drawString(infoText, 10, 22);
     }
 }
+

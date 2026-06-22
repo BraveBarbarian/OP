@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class WheelApp {
 
-    public static void main(String[] args) {
+    static void main() {
 
         Scanner scanner = new Scanner(System.in); //User Input
         WheelOfFortune myWheel = new WheelOfFortune(1.00, new int[]{15, 10, 4, 1}, new double[]{0, 1, 2, 5});
