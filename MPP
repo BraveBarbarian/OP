@@ -1,0 +1,159 @@
+
+
+/**
+Mikroprozessorpraktikum 2: LED-Panel und Timer
+name: main.c
+datum: 09.11.2026
+autoren: Lars Rippert, Fiona Wilhelm 2751251
+ */
+
+
+#include "tm4c1294ncpdt.h"
+#include <stdint.h>
+#include <stdio.h>
+
+#define TRIGGER_PIN 0x01 // PA0
+#define ECHO_PIN 0x02 //PA1
+
+// Sleep mittels GPTM Timer0
+
+void Timer0_Init(void){
+	SYSCTL_RCGCTIMER_R |= 0x01; // Takt einschalten
+
+	while(!(SYSCTL_PRTIMER_R & 0x01)); // Warten bis Timer0 bereit
+
+	TIMER0_CTL_R &=~ 0x01; //Timero ausschalten
+
+	TIMER0_CFG_R = 0x00; // 32-Bit Timer konfigurieren
+
+	TIMER0_TAMR_R = 0x01; // One-Shot Modus aktivieren
+
+	TIMER0_TAMR_R &=~(1<<4); //Down-counter einstellen
+}
+
+void sleep(uint32_t ms){
+	uint32_t ticks;
+	ticks = ms * 16000; // Umrechnung ms -> takte bei 16 Mhz
+
+	TIMER0_CTL_R &=~ 0x01; // Timer stoppen
+
+	TIMER0_TAILR_R = ticks - 1; //startwert laden
+
+	TIMER0_ICR_R = 0x01; // timeout-flag löschen
+
+	TIMER0_CTL_R |= 0x01; //Timer starten
+
+	while((TIMER0_RIS_R & 0x01) == 0); // warten bis Timer abgelaufen
+
+	TIMER0_ICR_R = 0x01; //timeoutflag löschen
+}
+
+// Timer1 für Laufzeitmessung
+
+void Timer1_Init(void){
+	SYSCTL_RCGCTIMER_R |= 0x02; //Takt aktivieren
+
+	while(!(SYSCTL_PRTIMER_R & 0x02)); // warten bis timer1 bereit
+
+	TIMER1_CTL_R &=~ 0x01; // timer1 ausschalten
+
+	TIMER1_CFG_R = 0x00; // 32-bit timer verwenden
+
+	TIMER1_TAMR_R = 0x02; // periodic mode auswählen
+
+	TIMER1_TAILR_R = 0xFFFFFFFF; // maximale zählweite setzen
+}
+
+// GPIO
+
+void GPIO_Init(void){
+    SYSCTL_RCGCGPIO_R |= (1 << 3);                   
+    while(!(SYSCTL_PRGPIO_R & (1 << 3)));
+
+    GPIO_PORTD_DIR_R |=  TRIGGER_PIN;                 // PD0 Ausgang
+    GPIO_PORTD_DIR_R &= ~ECHO_PIN;                    // PD1 Eingang
+    GPIO_PORTD_DEN_R |= TRIGGER_PIN | ECHO_PIN;
+}
+
+//Ultraschall-Trigger
+
+void TriggerPulse(void){
+	GPIO_PORTA_DATA_R &=~ TRIGGER_PIN; // Trigger zunächst auf LOW setzen
+
+	for(int i = 0; i < 100; i++); // Wartezeit
+
+	GPIO_PORTA_DATA_R |= TRIGGER_PIN; // Trigger auf HIGH setzen
+
+	for(int i = 0; i < 300; i++); // Triggerpuls erzeugen
+
+	GPIO_PORTA_DATA_R &=~ TRIGGER_PIN; // Trigger wieder auf Low setzen
+}
+
+//Echozeit messen
+
+uint32_t MeasureEchoTicks(void){
+    TriggerPulse();
+    while((GPIO_PORTD_DATA_R & ECHO_PIN) == 0);
+    uint32_t t1 = TIMER1_TAV_R;                       // Start
+    while(GPIO_PORTD_DATA_R & ECHO_PIN);
+    uint32_t t2 = TIMER1_TAV_R;                       // Ende
+    return t1 - t2;                                   
+}
+
+//Entfernung berechnen
+float CalculateDistanceCM(uint32_t ticks){
+	float time_us;
+
+	time_us = ticks / 16.0f; // Ticks in us umrechnen
+
+	return time_us / 58.0f; // Entfernung in cm berechnen
+}
+
+//LED Pendel Anzeige
+//ANPASSEN
+void DisplayDistance(float distance){
+	uint8_t bar;
+	if(distance < 10){
+		bar = 0x01; // eine LED
+	}else if (distance < 20) {
+		bar = 0x03; // zwei LED
+	}else if (distance < 30) {
+		bar = 0x07; // drei LED
+	}else if (distance < 40) {
+		bar = 0x0F;
+	}else if (distance < 50) {
+		bar = 0x1F;
+	}else if (distance < 60) {
+		bar = 0x3F;
+	}else if (distance < 70) {
+		bar = 0x7F; // sieben LED
+	}else {
+		bar = 0xFF; // alle LED
+	}
+
+	// HINWEIS: 'bar' muss noch an den entsprechenden LED-Port geschrieben werden
+    // z. B. GPIO_PORTN_DATA_R = bar;
+}
+int main(void)
+{
+	uint32_t ticks;
+	float distance;
+
+	GPIO_Init();
+
+	Timer0_Init();
+
+	Timer1_Init();
+
+	while(1){
+		ticks =  MeasureEchoTicks();
+
+		distance = CalculateDistanceCM(ticks);
+
+		DisplayDistance(distance);
+
+		sleep(60);
+	}
+
+	return 0;
+}
