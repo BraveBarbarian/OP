@@ -1,0 +1,52 @@
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%  Name: Lars Rippert, Fiona Wilhelm 
+%  Date: 02.11.2026 
+% 
+%  
+%                     
+% 
+% 
+%SamplingTheorem.m: investigates the effects of the  
+%sampling theorem on audio signals 
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+clc 
+close all 
+clear
+
+
+f_sa = 48000;
+N = 8192;
+t = linspace(0, (1/f_sa * N), (N/8)); % bei unterabtasten N/8
+%f = linspace(-f_sa, (f_sa/N), f_sa);
+
+adc = audioDeviceReader(f_sa, N);
+
+while(true)
+    x_n = adc();
+    x_n=x_n(1:8:end);
+
+    subplot(1, 2, 1);
+    plot(t, x_n,'b-', 'LineWidth', 2);
+
+    [X_f, f] = MfourierTransform(x_n, f_sa);
+
+    subplot(1, 2, 2);
+    plot((f/8), X_f, 'b-', 'LineWidth', 2); % bei unterabtasten f/8
+
+    sound(x_n, f_sa);
+
+
+    drawnow;
+    pause(0.01);
+end
+
+
+
+function [X_f, f] = MfourierTransform(x_n, fs)
+N = length(x_n);
+X_f = abs(fftshift(fft(x_n))) / N;
+f = (-N/2:N/2-1) * (fs/N);
+
+end
